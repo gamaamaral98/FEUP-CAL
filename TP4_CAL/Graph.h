@@ -334,8 +334,37 @@ vector<T> Graph<T>::topsort() const {
 
 template <class T>
 int Graph<T>::maxNewChildren(const T & source, T &inf) const {
-	// TODO (28 lines, mostly reused)
-	return 0;
+	auto s = findVertex(source);
+	if(s == NULL) return -1;
+
+	int maxChild = 0;
+	queue<Vertex<T>*> q;
+	inf = s->info;
+
+	for(auto v = vertexSet.begin(); v != vertexSet.end(); v++){
+		(*v)->visited = false;
+	}
+	s->visited = true;
+	q.push(s);
+
+	while(!q.empty()){
+		auto v = q.front();
+		q.pop();
+		int children = 0;
+		for(auto &e : v->adj){
+			auto d = e.dest;
+			if( ! d->visited ){
+				d->visited = true;
+				q.push(d);
+				children++;
+			}
+		}
+		if(maxChild < children){
+			maxChild = children;
+			inf = v->info;
+		}
+	}
+	return maxChild;
 }
 
 /****************** 3b) isDAG   (HOME WORK)  ********************/
@@ -352,6 +381,16 @@ template <class T>
 bool Graph<T>::isDAG() const {
 	// TODO (9 lines, mostly reused)
 	// HINT: use the auxiliary field "processing" to mark the vertices in the stack.
+	for(auto v : vertexSet){
+		v->visited = false;
+		v->processing = false;
+	}
+	for( auto v : vertexSet ){
+		if( !v->visited){
+			if(! dfsIsDAG(v))
+				return false;
+			}
+	}
 	return true;
 }
 
@@ -362,6 +401,20 @@ bool Graph<T>::isDAG() const {
 template <class T>
 bool Graph<T>::dfsIsDAG(Vertex<T> *v) const {
 	// TODO (12 lines, mostly reused)
+	v->visited = true;
+	v->processing = true;
+	for( auto &e : v->adj){
+		auto d = e.dest;
+		if(d->processing){
+			return false;
+		}
+		if(!d->visited){
+			if(!dfsIsDAG(d)){
+				return false;
+			}
+		}
+	}
+	v->processing = false;
 	return true;
 }
 
