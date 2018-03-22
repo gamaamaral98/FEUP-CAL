@@ -41,6 +41,8 @@ public:
 	Vertex *getPath() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
+	void setDist(double d);
+
 };
 
 
@@ -75,6 +77,12 @@ template <class T>
 Vertex<T> *Vertex<T>::getPath() const {
 	return this->path;
 }
+
+template <class T>
+void Vertex<T>::setDist(double d) {
+	this->dist = d;
+}
+
 
 /********************** Edge  ****************************/
 
@@ -180,11 +188,29 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 		v->dist = infinite;
 		v->path = NULL;
 	}
-	s->dist = 0;
 	MutablePriorityQueue<Vertex<T>> q;
 	q.insert(s);
+	s->dist = 0;
 
+	while(!q.empty()){
 
+		auto v = q.extractMin();
+
+		for( auto &e : v->adj){
+			auto w = e.dest;
+
+			if(w->getDist() > (v->getDist() + e.weight)){
+				w->dist = (v->getDist() + e.weight);
+				w->path = v;
+
+				if(w->dist == infinite){
+					q.insert(w);
+				}else{
+					q.decreaseKey(w);
+				}
+			}
+		}
+	}
 }
 
 template<class T>
