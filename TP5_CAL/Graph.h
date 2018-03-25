@@ -42,6 +42,7 @@ public:
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
 	void setDist(double d);
+	void setPath(Vertex<T> *vert);
 
 };
 
@@ -83,6 +84,10 @@ void Vertex<T>::setDist(double d) {
 	this->dist = d;
 }
 
+template <class T>
+void Vertex<T>::setPath(Vertex<T> *vert){
+	this->path = vert;
+}
 
 /********************** Edge  ****************************/
 
@@ -180,34 +185,44 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
 	auto s = findVertex(origin);
-	if(s == NULL) return;
 
 	int infinite = std::numeric_limits<int>::max();
 
 	for(auto v : vertexSet){
-		v->dist = infinite;
-		v->path = NULL;
+		v->setDist(infinite);
+		v->setPath(NULL);
+		v->visited = false;
 	}
+
+	s->setDist(0);
+
 	MutablePriorityQueue<Vertex<T>> q;
+
 	q.insert(s);
-	s->dist = 0;
 
 	while(!q.empty()){
 
 		auto v = q.extractMin();
 
 		for( auto &e : v->adj){
+
 			auto w = e.dest;
 
-			if(w->getDist() > (v->getDist() + e.weight)){
-				w->dist = (v->getDist() + e.weight);
-				w->path = v;
+			double old_d = w->getDist();
+			double new_d = v->getDist() + e.weight;
 
-				if(w->dist == infinite){
+			if(old_d > new_d){
+
+				w->setDist(new_d);
+
+				w->setPath(v);
+
+				if(!w->visited){
 					q.insert(w);
 				}else{
 					q.decreaseKey(w);
 				}
+				w->visited = true;
 			}
 		}
 	}
@@ -216,7 +231,16 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 template<class T>
 vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
 	vector<T> res;
-	// TODO
+	auto v1 = findVertex(origin);
+	auto v2 = findVertex(dest);
+
+	if( v1 == NULL || v2 == NULL) return res;
+
+	res.push_back(v1->info);
+
+
+
+	res.push_back(v2->info);
 	return res;
 }
 
