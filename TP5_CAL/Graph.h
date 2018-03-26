@@ -293,20 +293,23 @@ void Graph<T>::bellmanFordShortestPath(const T &orig) {
 
 	Vertex<T>* s = findVertex(orig);
 	s->dist = 0;
-	int i = 1;
-	for(auto v = vertexSet.begin(); i < vertexSet.size() - 1 ; v++, i++){
-		for( auto &e : (*v)->adj){
-			auto w = e.dest;
-			if(w->getDist() > (*v)->getDist() + e.weight){
-				w->dist = (*v)->getDist() + e.weight;
-				w->path = (*v);
+
+	for(unsigned int i = 1; i < (vertexSet.size() - 1) ; i++){
+		for(auto v : vertexSet){
+			for(auto &e : v->adj){
+				auto w = e.dest;
+
+				if(w->getDist() > (v->getDist() + e.weight)){
+					w->setDist((v->getDist() + e.weight));
+					w->setPath(v);
+				}
 			}
 		}
 	}
-	for(auto v = vertexSet.begin(); v != vertexSet.end(); v++){
-		for(auto &e : (*v)->adj){
+	for(auto v : vertexSet){
+		for(auto &e : v->adj){
 			auto w = e.dest;
-			if(((*v)->getDist() + e.weight) < w->getDist()){
+			if((v->getDist() + e.weight) < w->getDist()){
 				cout << "Fail, there are cycles of negative weight"<< endl;
 			}
 		}
