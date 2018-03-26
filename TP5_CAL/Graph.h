@@ -236,22 +236,81 @@ vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
 
 	if( v1 == NULL || v2 == NULL) return res;
 
-	res.push_back(v1->info);
+	while(v2->getPath() != NULL) {
 
+		res.push_back(v2->getInfo());
 
+		v2 = v2->getPath();
 
-	res.push_back(v2->info);
+	}
+
+	res.push_back(origin);
+
+	reverse(res.begin(), res.end());
+
 	return res;
 }
 
 template<class T>
 void Graph<T>::unweightedShortestPath(const T &orig) {
-	// TODO
+
+	int infinite = std::numeric_limits<int>::max();
+
+	for(auto v : vertexSet){
+		v->setDist(infinite);
+		v->setPath(NULL);
+	}
+	auto s = findVertex(orig);
+	s->dist = 0;
+	queue<Vertex<T>*> q;
+	q.push(s);
+
+	while(!q.empty()){
+		auto v = q.front();
+		q.pop();
+
+		for(auto &e : v->adj){
+
+			auto w = e.dest;
+			if(w->getDist() == infinite){
+				w->dist = v->dist + 1;
+				w->path = v;
+				q.push(w);
+			}
+		}
+	}
 }
 
 template<class T>
 void Graph<T>::bellmanFordShortestPath(const T &orig) {
-	// TODO
+
+	int infinite = std::numeric_limits<int>::max();
+
+	for(auto v : vertexSet){
+		v->dist = infinite;
+		v->path = NULL;
+	}
+
+	Vertex<T>* s = findVertex(orig);
+	s->dist = 0;
+	int i = 1;
+	for(auto v = vertexSet.begin(); i < vertexSet.size() - 1 ; v++, i++){
+		for( auto &e : (*v)->adj){
+			auto w = e.dest;
+			if(w->getDist() > (*v)->getDist() + e.weight){
+				w->dist = (*v)->getDist() + e.weight;
+				w->path = (*v);
+			}
+		}
+	}
+	for(auto v = vertexSet.begin(); v != vertexSet.end(); v++){
+		for(auto &e : (*v)->adj){
+			auto w = e.dest;
+			if(((*v)->getDist() + e.weight) < w->getDist()){
+				cout << "Fail, there are cycles of negative weight"<< endl;
+			}
+		}
+	}
 }
 
 
