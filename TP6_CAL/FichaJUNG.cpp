@@ -133,11 +133,10 @@ void exercicio2()
 void exercicio3()
 {
 	GraphViewer *gv = new GraphViewer(600, 600, false);
- //Para Nodes: id, coord x, coord y;
- //Para Arestas: id, idNodeOrigem, idNodeDestino;
-	std::ifstream nodesFile, edgeFile;
+	gv->createWindow(600,600);
+
+	std::ifstream nodesFile;
 	nodesFile.open("nos.txt");
-	edgeFile.open("arestas.txt");
 
 	if(!nodesFile.good())
 		std::cout << "Could not open!" << endl;
@@ -179,6 +178,10 @@ void exercicio3()
 
 		gv->addNode(id, x, y);
 	}
+
+	std::ifstream edgeFile;
+	edgeFile.open("arestas.txt");
+
 	if(!edgeFile.good())
 		std::cout << "Could not open!" << endl;
 
@@ -186,9 +189,10 @@ void exercicio3()
 	std::string line1;
 
 	while(std::getline(edgeFile, line1)){
-		std::stringstream ss(line);
+		std::stringstream ss(line1);
 		std::string aux;
 		std::stringstream auxSS;
+
 		//id
 		std::getline(ss, aux, ';');
 		auxSS << aux;
@@ -216,7 +220,8 @@ void exercicio3()
 		auxSS.clear();
 		auxSS.str(std::string());
 
-		gv->addNode(ide, idorigem, iddest);
+		gv->addEdge(ide, idorigem, iddest,EdgeType::DIRECTED);
+		//gv->addEdge(ide, idorigem, iddest,EdgeType::UNDIRECTED);
 	}
 }
 
@@ -224,7 +229,7 @@ void exercicio3()
 int main() {
 	//exercicio1();
 	//exercicio2();
-	exercicio3();
+	//exercicio3();
 	getchar();
 	return 0;
 }
