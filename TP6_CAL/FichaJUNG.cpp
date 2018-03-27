@@ -15,47 +15,48 @@ void exercicio1()
 	gv->setBackground("background.jpg");
 	gv->createWindow(600,600);
 
-	gv->defineVertexColor("blue");gv->rearrange();
-	gv->defineEdgeColor("black");gv->rearrange();
+	gv->defineVertexColor("blue");
+	gv->defineEdgeColor("black");
 
-	gv->addNode(0);gv->rearrange();
-	gv->addNode(1);gv->rearrange();
+	gv->addNode(0);
+	gv->addNode(1);
 
-	gv->addEdge(0,0,1,EdgeType::DIRECTED);gv->rearrange();
+	gv->addEdge(0,0,1,EdgeType::DIRECTED);
 
-	gv->removeNode(1); gv->rearrange();
+	gv->removeNode(1);
 
-	gv->addNode(2); gv->rearrange();
+	gv->addNode(2);
 
-	gv->addEdge(1,1,2,EdgeType::DIRECTED);gv->rearrange();
-	gv->setVertexLabel(2,"Isto é um nó");gv->rearrange();
+	gv->addEdge(1,0,2,EdgeType::DIRECTED);
+	gv->setVertexLabel(2,"Isto é um nó");
 
-	gv->setEdgeLabel(1,"Isto é uma aresta");gv->rearrange();
+	gv->setEdgeLabel(1,"Isto é uma aresta");
 
-	gv->setVertexColor(2, "green");gv->rearrange();
+	gv->setVertexColor(2, "green");
 
-	gv->setEdgeColor(1, "yellow");gv->rearrange();
+	gv->setEdgeColor(1, "yellow");
+	gv->rearrange();
 }
 
 void exercicio2()
 {
 	GraphViewer *gv = new GraphViewer(600,600,false);
+	gv->createWindow(600,600);
 
 	gv->addNode(0, 300, 50);
 	gv->addNode(1, 318, 58);
 	gv->addNode(2, 325, 75);
 	gv->addNode(3, 318, 93);
-	gv->addNode( 4, 300, 100);
-	gv->addNode( 5, 282, 93);
-	gv->addNode( 6, 275, 75);
-	gv->addNode( 7, 282, 58);
-	gv->addNode( 8, 150, 200);
-	gv->addNode( 9, 300, 200);
-	gv->addNode( 10, 450, 200);
-	gv->addNode( 11, 300, 400);
-	gv->addNode( 12, 200, 550);
-	gv->addNode( 13, 400, 550);
-	gv->rearrange();
+	gv->addNode(4, 300, 100);
+	gv->addNode(5, 282, 93);
+	gv->addNode(6, 275, 75);
+	gv->addNode(7, 282, 58);
+	gv->addNode(8, 150, 200);
+	gv->addNode(9, 300, 200);
+	gv->addNode(10, 450, 200);
+	gv->addNode(11, 300, 400);
+	gv->addNode(12, 200, 550);
+	gv->addNode(13, 400, 550);
 
 	gv->addEdge(0,0,1,EdgeType::DIRECTED);
 	gv->addEdge(1,1,2,EdgeType::DIRECTED);
@@ -71,17 +72,62 @@ void exercicio2()
 	gv->addEdge(11,9,11,EdgeType::DIRECTED);
 	gv->addEdge(12,11,12,EdgeType::DIRECTED);
 	gv->addEdge(13,11,13,EdgeType::DIRECTED);
+
+	/*
+	 * Para que a alteração seja perceptível é necessário colocar a "dormir" antes
+	 * da execução do comando.
+	 */
+
+	Sleep(1000);
+	gv->removeNode(12);
 	gv->rearrange();
 
-	gv->removeNode(12);
+	Sleep(1000);
 	gv->removeNode(13);
 	gv->rearrange();
 
+	Sleep(1000);
 	gv->addNode(14, 250, 550);
-	Sleep(10);
 	gv->rearrange();
+
+	Sleep(1000);
 	gv->addNode(15, 350, 550);
 	gv->rearrange();
+
+
+	int j = 14;
+	for(int i = 0; i < 2; i++){
+		Sleep(1000);
+		gv->removeNode(j);
+		gv->rearrange();
+
+		j++;
+
+		Sleep(1000);
+		gv->removeNode(j);
+		gv->rearrange();
+
+		j++;
+		Sleep(1000);
+		gv->addNode(j, 250, 550);
+		gv->rearrange();
+
+		j++;
+		Sleep(1000);
+		gv->addNode(j, 350, 550);
+		gv->rearrange();
+
+		j--;
+	}
+	Sleep(100);
+	gv->addEdge(j,11,j,EdgeType::DIRECTED);
+	gv->rearrange();
+	j++;
+
+	Sleep(100);
+	gv->addEdge(j,11,j,EdgeType::DIRECTED);
+	gv->rearrange();
+
 }
 
 void exercicio3()
@@ -176,8 +222,8 @@ void exercicio3()
 
 
 int main() {
-	exercicio1();
-	exercicio2();
+	//exercicio1();
+	//exercicio2();
 	exercicio3();
 	getchar();
 	return 0;
